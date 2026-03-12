@@ -1,121 +1,105 @@
-## At e Soft Company Website
+# At e Soft Company Website
 
-Official website for **At e Soft Computer Systems (Pvt) Ltd**.
+Company website for **At e Soft Computer Systems (Pvt) Ltd**.
 
-This project is a PHP + MySQL website with:
+This is a PHP + MySQL website with:
 - Public pages (solutions, testimonials, inquiry form)
 - User authentication (register/login)
-- Admin panel (manage inquiries, testimonials, users, ES solutions images/content)
-- Manual password reset workflow (admin can reset user passwords; reset requests are tracked in admin)
+- Admin panel (inquiries, testimonials, solutions images, users)
+- Manual password reset workflow via admin (password reset requests list + admin password reset)
 
 ---
 
-## Tech Stack
+## Tech stack
 
-- **PHP** (works well with WAMP/XAMPP)
+- **PHP** (works with WAMP/XAMPP)
 - **MySQL / MariaDB**
-- **HTML/CSS** (project `styles.css`)
-- **PDO** for database access
+- Plain CSS (`styles.css`)
 
 ---
 
-## Project Structure (high level)
+## Quick start (Windows + WAMP/XAMPP)
 
-- `index.php` – homepage
-- `solutions.php` – solutions list
-- `es-*.php` – individual ES solution pages
-- `testimonials.php` – testimonials page
-- `inquiry.php` / `inquiry-submit.php` – inquiry form + submit handler
-- `auth/` – login/register/forgot password
-- `admin/` – admin panel pages
-- `includes/`
-  - `config.php` – base URL + company info
-  - `db.php` – database connection (NOT committed)
-  - `db.example.php` – database connection template
-  - `mail.php` – email helper (currently uses PHP `mail()`)
-  - `solution-data.php` – loads solution titles/images from DB
-- `database/` – SQL schema and upgrades
+### 1) Put the project into your web root
 
----
-
-## Setup (Local)
-
-### 1) Requirements
-- PHP 8.x recommended (7.4+ should work)
-- MySQL/MariaDB
-- WAMP/XAMPP (Windows) or any PHP server stack
-
-### 2) Put the project in your web root
 Example (WAMP):
-- `C:\wamp64\www\company_website\`
+- `C:\wamp64\www\company_website`
 
-Then you should be able to open:
-- `http://localhost/company_website/`
+Example (XAMPP):
+- `C:\xampp\htdocs\company_website`
 
-### 3) Create the database
-Create a database named:
+### 2) Create the database + import SQL
 
-- `company_website`
+1. Open **phpMyAdmin**
+2. Create a database named: `company_website` (charset: `utf8mb4`)
+3. Import:
+   - `database/install.sql`
 
-Then import these SQL files (in order):
+This creates all required tables (users, inquiries, testimonials, solutions, images, password reset requests, etc.).
 
-1. `database/schema.sql`
-2. `database/schema-additions.sql`
+### 3) Configure database connection
 
-Optional upgrades (only if you need those features / your DB is older):
-- `database/inquiry-upgrade.sql`
-- `database/user-profile-upgrade.sql`
-- `database/password-reset.sql`
+This repo **does not** commit real DB credentials.
 
-### 4) Configure DB connection (important)
-`includes/db.php` is ignored by git for safety.
+1. Copy the example file:
+   - `includes/db.example.php` → `includes/db.php`
+2. Edit `includes/db.php` to match your MySQL user/password and DB name.
 
-Copy the example file and edit it:
+> `includes/db.php` is ignored by git (see `.gitignore`).
 
-- Copy `includes/db.example.php` → `includes/db.php`
-- Update DB name/user/password inside `includes/db.php`
+### 4) Set the base URL
 
-### 5) Configure base URL
-Edit:
-
-- `includes/config.php`
-
-Set:
+Edit `includes/config.php`:
 
 - `$BASE_URL = '/company_website';`
 
-If you rename the folder, update `$BASE_URL` accordingly.
+If you host in a different folder, update this value.
+
+### 5) Open the site
+
+- Home: `http://localhost/company_website/`
+- Inquiry: `http://localhost/company_website/inquiry.php`
+- Admin: `http://localhost/company_website/admin/dashboard.php`
 
 ---
 
-## Admin Panel
+## Admin login
 
-### Access
-- Admin pages are under: `admin/`
-- Login at: `auth/login.php`
+`database/install.sql` creates a default admin user:
 
-### Default admin
-The SQL in `database/schema.sql` includes a sample admin record (example email and a default password hash).
-After installing, **change the admin credentials** in your DB for production use.
+- **Username**: `admin`
+- **Email**: `admin@atesoft.example`
+- **Password**: `password`
 
-### Admin features
-- Inquiries management
-- Testimonials management
-- Users listing + activate/deactivate
-- Admin password reset button per user
-- ES Solutions image management (images are pulled from DB on `es-*.php` pages)
-- Password reset requests log page: `Admin → Password requests`
+After first login, change it immediately.
 
 ---
 
-## Password Reset Workflow (Manual)
+## Password reset (manual admin workflow)
 
-Email sending may not be available on some local setups. This project supports a manual flow:
+Email sending may not be available on some local stacks. This project supports a manual workflow:
 
-- Users submit **Forgot password** (`auth/forgot-password.php`)
-- A request is logged in `password_reset_requests` (status defaults to `pending`)
-- Admin can view requests in: `admin/password-requests.php`
-- Admin resets the password in: `admin/users.php`
-- Admin marks the request as **done** in the Password requests page
+1. User submits **Forgot password** (`auth/forgot-password.php`)
+2. Request is logged in DB table: `password_reset_requests` with status `pending`
+3. Admin views pending requests:
+   - `Admin → Password requests`
+4. Admin resets the user password:
+   - `Admin → Users → Reset password`
+5. Admin marks the request as done:
+   - `Password requests → Mark as done`
 
+---
+
+## Notes for GitHub
+
+- Sensitive/local files are ignored in `.gitignore`:
+  - `includes/db.php`
+  - upload folders (if created)
+  - logs, IDE config folders
+
+---
+
+## License
+
+Internal project for At e Soft Computer Systems (Pvt) Ltd.
 
