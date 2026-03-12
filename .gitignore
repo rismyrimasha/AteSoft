@@ -1,0 +1,23 @@
+# Sensitive/local configuration
+/includes/db.php
+
+# User uploads (if/when created)
+/uploads/
+/upload/
+/user_uploads/
+
+# Logs
+*.log
+*.tmp
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+
+# Dependency folders (if used later)
+/vendor/
+/node_modules/
+
